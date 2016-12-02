@@ -1,0 +1,6 @@
+main: com.diamonddagger590.backpacks.Main
+version: 0.1
+name: BackPacks
+commands:
+  save:
+    description: save all data
