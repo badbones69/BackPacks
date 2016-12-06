@@ -3,7 +3,9 @@ package com.diamonddagger590.backpacks;
 import java.io.File;
 import java.io.InputStream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 
 public class API {
@@ -14,20 +16,18 @@ public class API {
 		return instance;
 	}
 	
-	public void createPlayerFile(Player p){
-		File playerData = listHandler.getPlayerFile(p);
+	public void createPlayerFile(Player pl, Plugin p){
+		File playerData = listHandler.getPlayerFile(pl, p);
 		if(!playerData.exists()){
 			try{
-        		File en = new File(playerData, "/" + p.getUniqueId() + ".yml");
-         		InputStream E = getClass().getResourceAsStream("/" + p.getUniqueId() + ".yml");
-         		ListHandler.copyFile(E, en);
+				listHandler.getFile(pl, p).set("Info.DisplayName", pl.getDisplayName());
+				listHandler.savePlayerData(pl, p);
+				listHandler.getFile(pl, p).set("Info.BackpackLevel", "1");
+				listHandler.savePlayerData(pl, p);
          	}catch (Exception e) {
          		e.printStackTrace();
          	}
 		}
-		listHandler.getPlayerData(p).set("DisplayName", p.getDisplayName());
-		listHandler.getPlayerData(p).set("BackpackLevel", "1");
-		listHandler.savePlayerData(p);
 	}
 
 

@@ -4,3 +4,5 @@ name: BackPacks
 commands:
   save:
     description: save all data
+  bp: 
+    description: open a bp

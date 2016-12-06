@@ -52,23 +52,30 @@ public class ListHandler {
 	public FileConfiguration getConfig(){
 		return config;
 	}
-	public FileConfiguration getPlayerData(Player p){
-		File getplayerFile = new File(PlayerData + "/" + p.getUniqueId() + ".yml");
-		return YamlConfiguration.loadConfiguration(getplayerFile);
+	public FileConfiguration getFile(Player pl, Plugin p) {
+		 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
+		 File f = new File(userdata, File.separator + pl.getUniqueId() + ".yml");
+		 playerFile = YamlConfiguration.loadConfiguration(f);
+		return playerFile;
 	}
-	public File getPlayerFile(Player p){
-		File getplayerFile = new File(PlayerData + "/" + p.getUniqueId() + ".yml");
-		return getplayerFile;
+	
+	public File getPlayerFile(Player pl, Plugin p){
+		 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
+		 File f = new File(userdata, File.separator + pl.getUniqueId() + ".yml");
+		return f;
 	}
-	public void savePlayerData(Player p){
+	
+	public void savePlayerData(Player pl, Plugin p){
 		try {
-			File saveplayerFile = new File(PlayerData + "/" + p.getUniqueId() + ".yml");
-			playerFile.save(saveplayerFile);
+			 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
+			 File f = new File(userdata, File.separator + pl.getUniqueId() + ".yml");
+			playerFile.save(f);
 		} catch (IOException e) {
 			Bukkit.getServer().getLogger()
 					.severe(ChatColor.RED + "Could not save to the PlayerData folder!");
 		}
 	}
+	
 	public void saveConfig(){
 		try {
 			config.save(configfile);

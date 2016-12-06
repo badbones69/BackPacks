@@ -22,8 +22,12 @@ public class Main extends JavaPlugin{
 	public void onDisable(){
 	}
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(cmd.equals("save")){
-			api.createPlayerFile((Player) sender);
+		if(cmd.getName().equals("save")){
+			api.createPlayerFile((Player) sender, this);
+			return true;
+		}
+		if(cmd.getName().equals("bp")){
+			Commands.BP((Player) sender, this);
 			return true;
 		}
 		return false;
