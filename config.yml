@@ -1,0 +1,33 @@
+##########################
+### Main Config For BP ###
+##########################
+#
+#Notes:
+#    Do not use ' or " in messages as I have not yet added support for these icons.
+#   - Do not remove any lines as that will throw errors
+#   - This plugin only supports Minecraft color codes. Ex) &eHello World&7!
+#       - Use this link for a list of the codes: https://wiki.ess3.net/mc/
+#   - If you want a message to be blank, please leave it as ''
+#   - This plugin supports player name place holders as %Player% in certain locations
+# If you receive an error when BP loads, ensure that:
+#   - No tabs are present: YAML only allows spaces
+#   - Indents are correct: YAML hierarchy is based entirely on indentation
+###########################
+PluginPrefix: '&7[&1BackPacks&7]&6>>'
+NoPerms: '&cYou do not have permission to run the command'
+NotEnoughMoney1: '&cSorry, you are lacking the funds to do that'
+#This is the only message that supports %Money%
+NotEnoughMoney2: '&cYou need &e%Money% to do that upgrade'
+#This is the only message that supports %SlotNumber%
+SuccessfulUpgrade: '&aYour backpack has been upgrade to have &e%SlotNumber% &aslots'
+#Supports the %Player% placeholder
+BackPackTitle: 'BackPack'
+#ConfigSection
+Config:
+#You must manually set this. If you lower this amount, all players that try and upgrade after that point will have their backpacks shrunk and lose those items
+#You can add as many levels as you would like
+  MaxBackPackLevel: 3
+#Each level and the cost. DO NOT DEVIATE FROM THIS FORMAT. 
+#People default have level 1 so there is no need to have it. Will add an option for this later
+  BackPackCost2: 2000
+  BackPackCost3: 3000
