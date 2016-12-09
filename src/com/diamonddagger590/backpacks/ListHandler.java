@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,6 +28,9 @@ public class ListHandler {
 	File configfile;
 	File PlayerData;
 	
+	File UUIDFile;
+	FileConfiguration uuidfile;
+	
 	public void setup(Plugin p) {
 		//create a datafolder if it doesnt exist
 		if (!p.getDataFolder().exists()) {
@@ -44,6 +48,18 @@ public class ListHandler {
 		}
 		config = YamlConfiguration.loadConfiguration(configfile);
 		
+		UUIDFile = new File(p.getDataFolder(), "UUIDFile.yml");
+		if (!UUIDFile.exists()) {
+			try{
+        		File en = new File(p.getDataFolder(), "/UUIDFile.yml");
+         		InputStream E = getClass().getResourceAsStream("/UUIDFile.yml");
+         		copyFile(E, en);
+         	}catch (Exception e) {
+         		e.printStackTrace();
+         	}
+		}
+		uuidfile = YamlConfiguration.loadConfiguration(UUIDFile);
+		
 		PlayerData = new File(p.getDataFolder() + "/PlayerData");
         if (!PlayerData.exists()) {
             PlayerData.mkdir();
@@ -52,9 +68,20 @@ public class ListHandler {
 	public FileConfiguration getConfig(){
 		return config;
 	}
+	
+	public FileConfiguration getUUIDFile(){
+		return uuidfile;
+	}
+	
 	public FileConfiguration getFile(Player pl, Plugin p) {
 		 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
 		 File f = new File(userdata, File.separator + pl.getUniqueId() + ".yml");
+		 playerFile = YamlConfiguration.loadConfiguration(f);
+		return playerFile;
+	}
+	public FileConfiguration getFile(UUID uuid, Plugin p) {
+		 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
+		 File f = new File(userdata, File.separator + uuid + ".yml");
 		 playerFile = YamlConfiguration.loadConfiguration(f);
 		return playerFile;
 	}
@@ -75,6 +102,16 @@ public class ListHandler {
 					.severe(ChatColor.RED + "Could not save to the PlayerData folder!");
 		}
 	}
+	public void savePlayerData(UUID uuid, Plugin p){
+		try {
+			 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
+			 File f = new File(userdata, File.separator + uuid + ".yml");
+			playerFile.save(f);
+		} catch (IOException e) {
+			Bukkit.getServer().getLogger()
+					.severe(ChatColor.RED + "Could not save to the PlayerData folder!");
+		}
+	}
 	
 	public void saveConfig(){
 		try {
@@ -83,6 +120,22 @@ public class ListHandler {
 			Bukkit.getServer().getLogger()
 					.severe(ChatColor.RED + "Could not save config.yml!");
 		}
+	}
+	
+	public void saveUUIDFile(){
+		try {
+			uuidfile.save(UUIDFile);
+		} catch (IOException e) {
+			Bukkit.getServer().getLogger()
+					.severe(ChatColor.RED + "Could not save UUIDFile.yml!");
+		}
+	}
+	
+	public void reloadConfig(){
+		config = YamlConfiguration.loadConfiguration(configfile);
+	}
+	public void reloadUUIDFile(){
+		uuidfile = YamlConfiguration.loadConfiguration(UUIDFile);
 	}
 	
 	public static void copyFile(InputStream in, File out) throws Exception { // https://bukkit.org/threads/extracting-file-from-jar.16962/
@@ -105,7 +158,4 @@ public class ListHandler {
             }
         }
     }
-	
-	
-
 }

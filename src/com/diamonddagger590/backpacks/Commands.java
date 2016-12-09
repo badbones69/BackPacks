@@ -1,5 +1,7 @@
 package com.diamonddagger590.backpacks;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -8,7 +10,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 public class Commands {
-
+	@SuppressWarnings("deprecation")
+	public static Player getPlayer(String target, Player targ){
+		if(targ == null){
+			targ = Bukkit.getPlayer(target).getPlayer();
+			return targ;
+		}
+		return targ;
+	}
 	public static void BP(Player p, Plugin pl){
 		if(p.hasPermission("bp.open") || p.hasPermission("bp.*")){
 			int backpackSize = Main.listHandler.getFile(p, pl).getInt("Info.BackpackLevel");
@@ -65,6 +74,72 @@ public class Commands {
 			}
 		}
 		
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void BPsee(Player p, String target, Plugin pl){
+		if(p.hasPermission("bpsee.edit") || p.hasPermission("bp.*")){
+			UUID uuid;
+			if(Bukkit.getOnlinePlayers().contains(Bukkit.getPlayer(target))){
+				uuid = Bukkit.getOfflinePlayer(target).getUniqueId();
+			}
+			else{
+				uuid = Bukkit.getOfflinePlayer(target).getUniqueId();
+			}
+			if(!Main.listHandler.getUUIDFile().contains(uuid.toString())){
+				return;
+			}
+			String name = Main.listHandler.getUUIDFile().getString(uuid.toString());
+			int backpackSize = Main.listHandler.getFile(uuid, pl).getInt("Info.BackpackLevel");
+			int backpackInventorySize = backpackSize * 9;
+			Inventory inv = Bukkit.createInventory(null, backpackInventorySize, Main.color(Main.listHandler.getConfig().getString("BackPackEditingTitle").replaceAll("%Player%", name)));
+			for(int i = 0; i<backpackInventorySize; i++){
+				int number = i + 1;
+				if(Main.listHandler.getFile(uuid, pl).contains("Info.BackPackSlot" + (number))){
+					ItemStack item = Main.listHandler.getFile(uuid, pl).getItemStack("Info.BackPackSlot" + (number));
+					inv.setItem(i, item);
+				}
+				else{
+					continue;
+				}
+			}
+			p.openInventory(inv);
+			return;
+		
+		}
+		if(p.hasPermission("bpsee.view") || p.hasPermission("bp.*")){
+			UUID uuid;
+			if(!Bukkit.getOnlinePlayers().contains(Bukkit.getPlayer(target))){
+				uuid = Bukkit.getOfflinePlayer(target).getUniqueId();
+			}
+			else{
+				uuid = Bukkit.getOfflinePlayer(target).getUniqueId();
+			}
+			if(!Main.listHandler.getUUIDFile().contains(uuid.toString())){
+				return;
+			}
+			String name = Main.listHandler.getUUIDFile().getString(uuid.toString());
+			int backpackSize = Main.listHandler.getFile(uuid, pl).getInt("Info.BackpackLevel");
+			int backpackInventorySize = backpackSize * 9;
+			Inventory inv = Bukkit.createInventory(null, backpackInventorySize, Main.color(Main.listHandler.getConfig().getString("BackPackViewingTitle").replaceAll("%Player%", name)));
+			for(int i = 0; i<backpackInventorySize; i++){
+				int number = i + 1;
+				if(Main.listHandler.getFile(uuid, pl).contains("Info.BackPackSlot" + (number))){
+					ItemStack item = Main.listHandler.getFile(uuid, pl).getItemStack("Info.BackPackSlot" + (number));
+					inv.setItem(i, item);
+				}
+				else{
+					continue;
+				}
+			}
+			p.openInventory(inv);
+			return;
+		
+		}
+		else{
+			p.sendMessage(Main.color(Main.listHandler.getConfig().getString("PluginPrefix") + Main.listHandler.getConfig().getString("NoPerms")));
+			return;
+		}
 	}
 
 }

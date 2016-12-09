@@ -17,7 +17,7 @@ public class DeathEvent implements Listener{
 		Player p = e.getEntity();
 		World w = p.getWorld();
 		String wname = w.getName();
-		if(p.hasPermission("bp.nodrop") || p.hasPermission("bp.noworlddrop." + wname) || p.hasPermission("bp.noworlddrop.*")){
+		if(p.hasPermission("bp.nodrop") || p.hasPermission("bp.noworlddrop." + wname) || p.hasPermission("bp.*")){
 			return;
 		}
 		else{

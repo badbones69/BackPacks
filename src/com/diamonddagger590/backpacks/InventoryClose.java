@@ -1,5 +1,7 @@
 package com.diamonddagger590.backpacks;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,6 +14,7 @@ import org.bukkit.plugin.Plugin;
 
 public class InventoryClose implements Listener {
 	Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("BackPacks");
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent e){
 		Inventory inv = e.getInventory();
@@ -31,6 +34,40 @@ public class InventoryClose implements Listener {
 					continue;
 				}
 			}
+			return;
 		}
+		String title2 = inv.getTitle();
+		String s = title2;
+		int length = title2.length();
+		String ss[] = s.split(" ", length);
+		if(ss.length < 3){
+			return;
+		}
+		title2 = ss[0] + " " + ss[1] + " ";
+		UUID uuid;
+		if(Bukkit.getOnlinePlayers().contains(Bukkit.getPlayer(ss[2]))){
+			uuid = Bukkit.getPlayer(ss[2]).getUniqueId();
+		}
+		else{
+			uuid = Bukkit.getOfflinePlayer(ss[2]).getUniqueId();
+		}
+		if(title2.equals(Main.color(Main.listHandler.getConfig().getString("BackPackEditingTitle").replaceAll("%Player%", "")))){
+			int size = inv.getSize();
+				for(int i = 0; i < size; i++){
+					ItemStack item = inv.getItem(i);
+					if(!(item == null)){
+						Main.listHandler.getFile(uuid, pl).set("Info.BackPackSlot" + (i + 1), item);
+						Main.listHandler.savePlayerData(uuid, pl);
+					}
+					else{
+						Main.listHandler.getFile(uuid, pl).set("Info.BackPackSlot" + (i + 1), null);
+						Main.listHandler.savePlayerData(uuid, pl);
+						continue;
+					}
+				}
+				return;
+			//}
+		}
+		return;
 	}
 }

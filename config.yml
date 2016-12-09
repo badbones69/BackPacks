@@ -15,13 +15,17 @@
 ###########################
 PluginPrefix: '&7[&1BackPacks&7]&6>>'
 NoPerms: '&cYou do not have permission to run the command'
+Reloaded: '&aAll files were reloaded'
 NotEnoughMoney1: '&cSorry, you are lacking the funds to do that'
 #This is the only message that supports %Money%
-NotEnoughMoney2: '&cYou need &e%Money% to do that upgrade'
+NotEnoughMoney2: '&cYou need &e%Money% &cto do that upgrade'
 #This is the only message that supports %SlotNumber%
-SuccessfulUpgrade: '&aYour backpack has been upgrade to have &e%SlotNumber% &aslots'
+SuccessfulUpgrade: '&aYour backpack has been upgraded to have &e%SlotNumber% &aslots'
 #Supports the %Player% placeholder
 BackPackTitle: 'BackPack'
+#Code will break if %Player% is not the third word. 
+BackPackViewingTitle: 'BackPack View %Player%'
+BackPackEditingTitle: 'BackPack Edit %Player%'
 #ConfigSection
 Config:
 #You must manually set this. If you lower this amount, all players that try and upgrade after that point will have their backpacks shrunk and lose those items
