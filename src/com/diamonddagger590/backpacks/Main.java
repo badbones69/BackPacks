@@ -1,8 +1,11 @@
 package com.diamonddagger590.backpacks;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,6 +24,7 @@ public class Main extends JavaPlugin{
 	public static ListHandler listHandler = ListHandler.getInstance();
 	public static API api = API.getInstance();
 	public static Economy economy = null;
+	public static List<String> worlds = new ArrayList<String>();
 	@Override
 	//when server boots up
 	public void onEnable(){
@@ -31,6 +35,18 @@ public class Main extends JavaPlugin{
 		//setup list handler class
 		listHandler.setup(this);
 		setupEconomy();
+		for(World w : Bukkit.getServer().getWorlds()){
+			if(!(Main.listHandler.getDisabledFile().contains("DisabledWorlds." + w.getName()))){
+					Main.listHandler.getDisabledFile().set("DisabledWorlds." + w.getName(), "false");
+					Main.listHandler.saveDisabled();
+				}
+				if(Main.listHandler.getDisabledFile().getString("DisabledWorlds." + w.getName()).equals("true")){
+					worlds.add(w.getName());
+				}
+			else{
+				continue;
+			}
+		}
 	}
 	
 	public void onDisable(){
@@ -41,20 +57,65 @@ public class Main extends JavaPlugin{
 		}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(cmd.getName().equalsIgnoreCase("bp")){
+		if(cmd.getName().equalsIgnoreCase("bp")){}
 			if(args.length == 0){
-				Commands.BP((Player) sender, this);
+				if(!(sender instanceof Player)){
+					sender.sendMessage("&cOnly Players can run these commands");
+					return true;
+				}
+				Player p = (Player) sender;
+				for(String w : worlds){
+					String world = p.getWorld().getName();
+					if(world.equals(w)){
+						return true;
+					}
+					else{
+						continue;
+					}
+				}
+				Commands.BP(p, this);
 				return true;
 			}
 			if(args.length == 1 && args[0].equalsIgnoreCase("upgrade")){
-				Commands.BPUpgrade((Player) sender, this);
+				if(!(sender instanceof Player)){
+					sender.sendMessage("&cOnly Players can run these commands");
+					return true;
+				}
+				Player p = (Player) sender;
+				if(worlds.size() != 0){
+					for(String w : worlds){
+						String world = p.getWorld().getName();
+						if(world.equals(w)){
+							return true;
+						}
+						else{
+							continue;
+						}
+					}
+				}
+				Commands.BPUpgrade(p, this);
 				return true;
 			}
 			if(args.length == 1 && args[0].equalsIgnoreCase("reload")){
 				if(sender.hasPermission("bp.*") || sender.hasPermission("bp.reload")){
 					Main.listHandler.reloadConfig();
 					Main.listHandler.reloadUUIDFile();
+					Main.listHandler.reloadDisabledFile();
 					sender.sendMessage(Main.color(Main.listHandler.getConfig().getString("Reloaded")));
+					worlds.clear();
+					for(World w : Bukkit.getServer().getWorlds()){
+						if(!(Main.listHandler.getDisabledFile().contains("DisabledWorlds." + w.getName()))){
+								Main.listHandler.getDisabledFile().set("DisabledWorlds." + w.getName(), "false");
+								Main.listHandler.saveDisabled();
+						}
+						if((Main.listHandler.getDisabledFile().getString("DisabledWorlds." + w.getName()).equals("true"))){
+							worlds.add(w.getName());
+						}
+						else{
+							continue;
+						}
+					}
+					
 					return true;
 				}
 				sender.sendMessage(Main.color(Main.listHandler.getConfig().getString("PluginPrefix") + Main.listHandler.getConfig().getString("NoPerms")));
@@ -65,7 +126,7 @@ public class Main extends JavaPlugin{
 					sender.sendMessage(Main.color("&e--------------------------"));
 					sender.sendMessage(Main.color("&7[&6BP&7]&3 /bp"));
 					sender.sendMessage(Main.color("&3    -Opens your backpack"));
-					sender.sendMessage(Main.color("&7[&6BP Upgrade&7]&3 /ce upgrade"));
+					sender.sendMessage(Main.color("&7[&6BP Upgrade&7]&3 /bp upgrade"));
 					sender.sendMessage(Main.color("&3    -Upgrades your backpack to the next tier"));
 					sender.sendMessage(Main.color("&7[&6BP See&7]&3 /bpsee [PlayerName]"));
 					sender.sendMessage(Main.color("&3    -Allows you to look at or edit a players backpack based on perms"));
@@ -75,8 +136,24 @@ public class Main extends JavaPlugin{
 				}
 			}
 			
-		}
+		
 		if(cmd.getName().equals("bpsee")){
+			if(!(sender instanceof Player)){
+				sender.sendMessage("&cOnly Players can run these commands");
+				return true;
+			}
+			Player p = (Player) sender;
+			if(worlds.size() != 0){
+				for(String w : worlds){
+					String world = p.getWorld().getName();
+					if(world.equals(w)){
+						return true;
+					}
+					else{
+						continue;
+					}
+				}
+			}
 			if(args.length == 1){
 				Commands.BPsee((Player) sender, args[0], this);
 				return true;

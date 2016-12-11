@@ -31,6 +31,9 @@ public class ListHandler {
 	File UUIDFile;
 	FileConfiguration uuidfile;
 	
+	File DisabledFile;
+	FileConfiguration disabled;
+	
 	public void setup(Plugin p) {
 		//create a datafolder if it doesnt exist
 		if (!p.getDataFolder().exists()) {
@@ -60,6 +63,18 @@ public class ListHandler {
 		}
 		uuidfile = YamlConfiguration.loadConfiguration(UUIDFile);
 		
+		DisabledFile = new File(p.getDataFolder(), "DisabledWorlds.yml");
+		if (!UUIDFile.exists()) {
+			try{
+        		File en = new File(p.getDataFolder(), "/DisabledWorlds.yml");
+         		InputStream E = getClass().getResourceAsStream("/DisabledWorlds.yml");
+         		copyFile(E, en);
+         	}catch (Exception e) {
+         		e.printStackTrace();
+         	}
+		}
+		disabled = YamlConfiguration.loadConfiguration(DisabledFile);
+		
 		PlayerData = new File(p.getDataFolder() + "/PlayerData");
         if (!PlayerData.exists()) {
             PlayerData.mkdir();
@@ -71,6 +86,10 @@ public class ListHandler {
 	
 	public FileConfiguration getUUIDFile(){
 		return uuidfile;
+	}
+	
+	public FileConfiguration getDisabledFile(){
+		return disabled;
 	}
 	
 	public FileConfiguration getFile(Player pl, Plugin p) {
@@ -131,11 +150,24 @@ public class ListHandler {
 		}
 	}
 	
+	public void saveDisabled(){
+		try {
+			disabled.save(DisabledFile);
+		} catch (IOException e) {
+			Bukkit.getServer().getLogger()
+					.severe(ChatColor.RED + "Could not save DisabledWorlds.yml!");
+		}
+	}
+	
 	public void reloadConfig(){
 		config = YamlConfiguration.loadConfiguration(configfile);
 	}
 	public void reloadUUIDFile(){
 		uuidfile = YamlConfiguration.loadConfiguration(UUIDFile);
+	}
+	
+	public void reloadDisabledFile(){
+		disabled = YamlConfiguration.loadConfiguration(DisabledFile);
 	}
 	
 	public static void copyFile(InputStream in, File out) throws Exception { // https://bukkit.org/threads/extracting-file-from-jar.16962/

@@ -1,5 +1,5 @@
 main: com.diamonddagger590.backpacks.Main
-version: 1.2
+version: 1.2.3
 name: BackPacks
 commands:
   bp: 

@@ -17,6 +17,9 @@ public class DeathEvent implements Listener{
 		Player p = e.getEntity();
 		World w = p.getWorld();
 		String wname = w.getName();
+		if(Main.listHandler.getDisabledFile().getString("DisabledWorlds." + p.getWorld().getName()).equals("true") && Main.listHandler.getConfig().getBoolean("Config.DeathDropsDisabledWorlds") == true){
+			return;
+		}
 		if(p.hasPermission("bp.nodrop") || p.hasPermission("bp.noworlddrop." + wname) || p.hasPermission("bp.*")){
 			return;
 		}

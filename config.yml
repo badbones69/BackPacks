@@ -28,6 +28,8 @@ BackPackViewingTitle: 'BackPack View %Player%'
 BackPackEditingTitle: 'BackPack Edit %Player%'
 #ConfigSection
 Config:
+#Change to false if you want death drops in worlds that are disabled
+  DeathDropsDisabledWorlds: true
 #You must manually set this. If you lower this amount, all players that try and upgrade after that point will have their backpacks shrunk and lose those items
 #You can add as many levels as you would like
   MaxBackPackLevel: 3

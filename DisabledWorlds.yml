@@ -1,0 +1,3 @@
+#Set it to true if you want commands disabled in the world
+#If you want drops also disabled universally without having to use the perms, change that in the config
+DisabledWorlds: {}
