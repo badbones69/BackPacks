@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
 public class ClickEvent implements Listener{
+	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		Inventory inv = e.getInventory();
@@ -22,6 +23,5 @@ public class ClickEvent implements Listener{
 			return;
 		}
 	}
-	
 
 }

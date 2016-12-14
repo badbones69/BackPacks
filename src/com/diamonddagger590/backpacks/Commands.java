@@ -7,10 +7,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 public class Commands {
-	@SuppressWarnings("deprecation")
+	
 	public static Player getPlayer(String target, Player targ){
 		if(targ == null){
 			targ = Bukkit.getPlayer(target).getPlayer();
@@ -18,15 +17,16 @@ public class Commands {
 		}
 		return targ;
 	}
-	public static void BP(Player p, Plugin pl){
+	
+	public static void BP(Player p){
 		if(p.hasPermission("bp.open") || p.hasPermission("bp.*")){
-			int backpackSize = Main.listHandler.getFile(p, pl).getInt("Info.BackpackLevel");
+			int backpackSize = Main.listHandler.getFile(p).getInt("Info.BackpackLevel");
 			int backpackInventorySize = backpackSize * 9;
 			Inventory inv = Bukkit.createInventory(null, backpackInventorySize, Main.color(Main.listHandler.getConfig().getString("BackPackTitle").replaceAll("%Player%", p.getName())));
 			for(int i = 0; i<backpackInventorySize; i++){
 				int number = i + 1;
-				if(Main.listHandler.getFile(p, pl).contains("Info.BackPackSlot" + (number))){
-					ItemStack item = Main.listHandler.getFile(p, pl).getItemStack("Info.BackPackSlot" + (number));
+				if(Main.listHandler.getFile(p).contains("Info.BackPackSlot" + (number))){
+					ItemStack item = Main.listHandler.getFile(p).getItemStack("Info.BackPackSlot" + (number));
 					inv.setItem(i, item);
 				}
 				else{
@@ -42,14 +42,14 @@ public class Commands {
 		}
 	}
 	
-	public static void BPUpgrade(Player p, Plugin pl){
+	public static void BPUpgrade(Player p){
 		int maxSize = Main.listHandler.getConfig().getInt("Config.MaxBackPackLevel");
-		FileConfiguration file = Main.listHandler.getFile(p, pl);
+		FileConfiguration file = Main.listHandler.getFile(p);
 		if(file.contains("Info.BackpackLevel")){
 			int backpacklevel = file.getInt("Info.BackpackLevel");
 			if(backpacklevel > maxSize){
 				file.set("Info.BackpackLevel", maxSize);
-				Main.listHandler.savePlayerData(p,  pl);
+				Main.listHandler.savePlayerData(p);
 			}
 			backpacklevel = backpacklevel + 1;
 			if(p.hasPermission("bp.upgrade." + Integer.toString(backpacklevel)) || p.hasPermission("bp.*") || p.hasPermission("bp.upgrade.*")){
@@ -62,7 +62,7 @@ public class Commands {
 				}
 				else{
 					file.set("Info.BackpackLevel", backpacklevel);
-					Main.listHandler.savePlayerData(p, pl);
+					Main.listHandler.savePlayerData(p);
 					Main.economy.withdrawPlayer(p, cost);
 					p.sendMessage(Main.color(Main.listHandler.getConfig().getString("PluginPrefix")) + Main.color(Main.listHandler.getConfig().getString("SuccessfulUpgrade").replaceAll("%SlotNumber%", Integer.toString(backpacklevel * 9))));
 					return;
@@ -77,7 +77,7 @@ public class Commands {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static void BPsee(Player p, String target, Plugin pl){
+	public static void BPsee(Player p, String target){
 		if(p.hasPermission("bpsee.edit") || p.hasPermission("bp.*")){
 			UUID uuid;
 			if(Bukkit.getOnlinePlayers().contains(Bukkit.getPlayer(target))){
@@ -90,13 +90,13 @@ public class Commands {
 				return;
 			}
 			String name = Main.listHandler.getUUIDFile().getString(uuid.toString());
-			int backpackSize = Main.listHandler.getFile(uuid, pl).getInt("Info.BackpackLevel");
+			int backpackSize = Main.listHandler.getFile(uuid).getInt("Info.BackpackLevel");
 			int backpackInventorySize = backpackSize * 9;
 			Inventory inv = Bukkit.createInventory(null, backpackInventorySize, Main.color(Main.listHandler.getConfig().getString("BackPackEditingTitle").replaceAll("%Player%", name)));
 			for(int i = 0; i<backpackInventorySize; i++){
 				int number = i + 1;
-				if(Main.listHandler.getFile(uuid, pl).contains("Info.BackPackSlot" + (number))){
-					ItemStack item = Main.listHandler.getFile(uuid, pl).getItemStack("Info.BackPackSlot" + (number));
+				if(Main.listHandler.getFile(uuid).contains("Info.BackPackSlot" + (number))){
+					ItemStack item = Main.listHandler.getFile(uuid).getItemStack("Info.BackPackSlot" + (number));
 					inv.setItem(i, item);
 				}
 				else{
@@ -119,13 +119,13 @@ public class Commands {
 				return;
 			}
 			String name = Main.listHandler.getUUIDFile().getString(uuid.toString());
-			int backpackSize = Main.listHandler.getFile(uuid, pl).getInt("Info.BackpackLevel");
+			int backpackSize = Main.listHandler.getFile(uuid).getInt("Info.BackpackLevel");
 			int backpackInventorySize = backpackSize * 9;
 			Inventory inv = Bukkit.createInventory(null, backpackInventorySize, Main.color(Main.listHandler.getConfig().getString("BackPackViewingTitle").replaceAll("%Player%", name)));
 			for(int i = 0; i<backpackInventorySize; i++){
 				int number = i + 1;
-				if(Main.listHandler.getFile(uuid, pl).contains("Info.BackPackSlot" + (number))){
-					ItemStack item = Main.listHandler.getFile(uuid, pl).getItemStack("Info.BackPackSlot" + (number));
+				if(Main.listHandler.getFile(uuid).contains("Info.BackPackSlot" + (number))){
+					ItemStack item = Main.listHandler.getFile(uuid).getItemStack("Info.BackPackSlot" + (number));
 					inv.setItem(i, item);
 				}
 				else{

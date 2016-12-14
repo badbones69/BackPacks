@@ -10,10 +10,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 public class InventoryClose implements Listener {
-	Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("BackPacks");
+	
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent e){
@@ -25,12 +25,11 @@ public class InventoryClose implements Listener {
 			for(int i = 0; i < size; i++){
 				ItemStack item = inv.getItem(i);
 				if(!(item == null)){
-					Main.listHandler.getFile(p, pl).set("Info.BackPackSlot" + (i + 1), item);
-					Main.listHandler.savePlayerData(p, pl);
-				}
-				else{
-					Main.listHandler.getFile(p, pl).set("Info.BackPackSlot" + (i + 1), null);
-					Main.listHandler.savePlayerData(p, pl);
+					Main.listHandler.getFile(p).set("Info.BackPackSlot" + (i + 1), item);
+					Main.listHandler.savePlayerData(p);
+				}else{
+					Main.listHandler.getFile(p).set("Info.BackPackSlot" + (i + 1), null);
+					Main.listHandler.savePlayerData(p);
 					continue;
 				}
 			}
@@ -47,27 +46,25 @@ public class InventoryClose implements Listener {
 		UUID uuid;
 		if(Bukkit.getOnlinePlayers().contains(Bukkit.getPlayer(ss[2]))){
 			uuid = Bukkit.getPlayer(ss[2]).getUniqueId();
-		}
-		else{
+		}else{
 			uuid = Bukkit.getOfflinePlayer(ss[2]).getUniqueId();
 		}
 		if(title2.equals(Main.color(Main.listHandler.getConfig().getString("BackPackEditingTitle").replaceAll("%Player%", "")))){
 			int size = inv.getSize();
-				for(int i = 0; i < size; i++){
-					ItemStack item = inv.getItem(i);
-					if(!(item == null)){
-						Main.listHandler.getFile(uuid, pl).set("Info.BackPackSlot" + (i + 1), item);
-						Main.listHandler.savePlayerData(uuid, pl);
-					}
-					else{
-						Main.listHandler.getFile(uuid, pl).set("Info.BackPackSlot" + (i + 1), null);
-						Main.listHandler.savePlayerData(uuid, pl);
-						continue;
-					}
+			for(int i = 0; i < size; i++){
+				ItemStack item = inv.getItem(i);
+				if(!(item == null)){
+					Main.listHandler.getFile(uuid).set("Info.BackPackSlot" + (i + 1), item);
+					Main.listHandler.savePlayerData(uuid);
+				}else{
+					Main.listHandler.getFile(uuid).set("Info.BackPackSlot" + (i + 1), null);
+					Main.listHandler.savePlayerData(uuid);
+					continue;
 				}
-				return;
-			//}
+			}
+			return;
 		}
 		return;
 	}
+	
 }

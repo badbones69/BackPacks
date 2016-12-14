@@ -14,14 +14,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class ListHandler { 
-	//create the listhandler info
-	static ListHandler instance = new ListHandler();
+	
+	private static ListHandler instance = new ListHandler();//create the listhandler info
 
 	public static ListHandler getInstance() {
 		return instance;
 	}
 	
 	Plugin p;
+	
 	FileConfiguration config;
 	FileConfiguration playerFile;
 
@@ -35,6 +36,7 @@ public class ListHandler {
 	FileConfiguration disabled;
 	
 	public void setup(Plugin p) {
+		this.p = p;
 		//create a datafolder if it doesnt exist
 		if (!p.getDataFolder().exists()) {
 			p.getDataFolder().mkdir();
@@ -92,26 +94,26 @@ public class ListHandler {
 		return disabled;
 	}
 	
-	public FileConfiguration getFile(Player pl, Plugin p) {
+	public FileConfiguration getFile(Player pl) {
 		 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
 		 File f = new File(userdata, File.separator + pl.getUniqueId() + ".yml");
 		 playerFile = YamlConfiguration.loadConfiguration(f);
 		return playerFile;
 	}
-	public FileConfiguration getFile(UUID uuid, Plugin p) {
+	public FileConfiguration getFile(UUID uuid) {
 		 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
 		 File f = new File(userdata, File.separator + uuid + ".yml");
 		 playerFile = YamlConfiguration.loadConfiguration(f);
 		return playerFile;
 	}
 	
-	public File getPlayerFile(Player pl, Plugin p){
+	public File getPlayerFile(Player pl){
 		 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
 		 File f = new File(userdata, File.separator + pl.getUniqueId() + ".yml");
 		return f;
 	}
 	
-	public void savePlayerData(Player pl, Plugin p){
+	public void savePlayerData(Player pl){
 		try {
 			 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
 			 File f = new File(userdata, File.separator + pl.getUniqueId() + ".yml");
@@ -121,7 +123,8 @@ public class ListHandler {
 					.severe(ChatColor.RED + "Could not save to the PlayerData folder!");
 		}
 	}
-	public void savePlayerData(UUID uuid, Plugin p){
+	
+	public void savePlayerData(UUID uuid){
 		try {
 			 File userdata = new File(p.getDataFolder(), File.separator + "PlayerData");
 			 File f = new File(userdata, File.separator + uuid + ".yml");
@@ -162,6 +165,7 @@ public class ListHandler {
 	public void reloadConfig(){
 		config = YamlConfiguration.loadConfiguration(configfile);
 	}
+	
 	public void reloadUUIDFile(){
 		uuidfile = YamlConfiguration.loadConfiguration(UUIDFile);
 	}
@@ -190,4 +194,5 @@ public class ListHandler {
             }
         }
     }
+	
 }

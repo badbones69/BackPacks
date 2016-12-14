@@ -1,5 +1,5 @@
 package com.diamonddagger590.backpacks;
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +9,14 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin{
-	public Main instance = this;
-	public File pluginFolder = instance.getDataFolder();
+	
 	public static ListHandler listHandler = ListHandler.getInstance();
 	public static API api = API.getInstance();
 	public static Economy economy = null;
@@ -24,27 +24,24 @@ public class Main extends JavaPlugin{
 	
 	@Override
 	public void onEnable(){ //when server boots up
-		Bukkit.getServer().getPluginManager().registerEvents(new InventoryClose(), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoining(), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new DeathEvent(), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new ClickEvent(), this);
+		PluginManager pm = Bukkit.getServer().getPluginManager();
+		pm.registerEvents(new InventoryClose(), this);
+		pm.registerEvents(new PlayerJoining(), this);
+		pm.registerEvents(new DeathEvent(), this);
+		pm.registerEvents(new ClickEvent(), this);
 		listHandler.setup(this); //setup list handler class
 		setupEconomy();
 		for(World w : Bukkit.getServer().getWorlds()){
-			if(!(Main.listHandler.getDisabledFile().contains("DisabledWorlds." + w.getName()))){
-				Main.listHandler.getDisabledFile().set("DisabledWorlds." + w.getName(), "false");
+			if(!Main.listHandler.getDisabledFile().contains("DisabledWorlds." + w.getName())){
+				Main.listHandler.getDisabledFile().set("DisabledWorlds." + w.getName(), false);
 				Main.listHandler.saveDisabled();
 			}
-			if(Main.listHandler.getDisabledFile().getString("DisabledWorlds." + w.getName()).equals("true")){
+			if(Main.listHandler.getDisabledFile().getBoolean("DisabledWorlds." + w.getName())){
 				worlds.add(w.getName());
 			}else{
 				continue;
 			}
 		}
-	}
-	
-	public static String color(String msg){
-		return ChatColor.translateAlternateColorCodes('&', msg);
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -64,7 +61,7 @@ public class Main extends JavaPlugin{
 						continue;
 					}
 				}
-				Commands.BP(p, this);
+				Commands.BP(p);
 				return true;
 			}
 			if(args.length == 1 && args[0].equalsIgnoreCase("upgrade")){
@@ -84,7 +81,7 @@ public class Main extends JavaPlugin{
 						}
 					}
 				}
-				Commands.BPUpgrade(p, this);
+				Commands.BPUpgrade(p);
 				return true;
 			}
 			if(args.length == 1 && args[0].equalsIgnoreCase("reload")){
@@ -106,7 +103,6 @@ public class Main extends JavaPlugin{
 							continue;
 						}
 					}
-					
 					return true;
 				}
 				sender.sendMessage(Main.color(Main.listHandler.getConfig().getString("PluginPrefix") + Main.listHandler.getConfig().getString("NoPerms")));
@@ -144,11 +140,15 @@ public class Main extends JavaPlugin{
 				}
 			}
 			if(args.length == 1){
-				Commands.BPsee((Player) sender, args[0], this);
+				Commands.BPsee((Player) sender, args[0]);
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public static String color(String msg){
+		return ChatColor.translateAlternateColorCodes('&', msg);
 	}
 	
     private boolean setupEconomy(){
