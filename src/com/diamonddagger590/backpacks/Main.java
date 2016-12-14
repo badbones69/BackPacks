@@ -12,11 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-
 import net.milkbowl.vault.economy.Economy;
-
-
-
 
 public class Main extends JavaPlugin{
 	public Main instance = this;
@@ -25,36 +21,31 @@ public class Main extends JavaPlugin{
 	public static API api = API.getInstance();
 	public static Economy economy = null;
 	public static List<String> worlds = new ArrayList<String>();
+	
 	@Override
-	//when server boots up
-	public void onEnable(){
+	public void onEnable(){ //when server boots up
 		Bukkit.getServer().getPluginManager().registerEvents(new InventoryClose(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoining(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new DeathEvent(), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new ClickEvent(), this);
-		//setup list handler class
-		listHandler.setup(this);
+		listHandler.setup(this); //setup list handler class
 		setupEconomy();
 		for(World w : Bukkit.getServer().getWorlds()){
 			if(!(Main.listHandler.getDisabledFile().contains("DisabledWorlds." + w.getName()))){
-					Main.listHandler.getDisabledFile().set("DisabledWorlds." + w.getName(), "false");
-					Main.listHandler.saveDisabled();
-				}
-				if(Main.listHandler.getDisabledFile().getString("DisabledWorlds." + w.getName()).equals("true")){
-					worlds.add(w.getName());
-				}
-			else{
+				Main.listHandler.getDisabledFile().set("DisabledWorlds." + w.getName(), "false");
+				Main.listHandler.saveDisabled();
+			}
+			if(Main.listHandler.getDisabledFile().getString("DisabledWorlds." + w.getName()).equals("true")){
+				worlds.add(w.getName());
+			}else{
 				continue;
 			}
 		}
 	}
 	
-	public void onDisable(){
-	}
-	
 	public static String color(String msg){
-		  return ChatColor.translateAlternateColorCodes('&', msg);
-		}
+		return ChatColor.translateAlternateColorCodes('&', msg);
+	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(cmd.getName().equalsIgnoreCase("bp")){}
@@ -135,8 +126,6 @@ public class Main extends JavaPlugin{
 					sender.sendMessage(Main.color("&e---------------------------"));
 				}
 			}
-			
-		
 		if(cmd.getName().equals("bpsee")){
 			if(!(sender instanceof Player)){
 				sender.sendMessage("&cOnly Players can run these commands");
@@ -162,15 +151,12 @@ public class Main extends JavaPlugin{
 		return false;
 	}
 	
-    private boolean setupEconomy()
-    {
+    private boolean setupEconomy(){
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
             economy = economyProvider.getProvider();
         }
-
         return (economy != null);
     }
+
 }
-
-
